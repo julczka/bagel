@@ -26,26 +26,26 @@
 </template>
 
 <script>
-import Navigation from "@/components/Navigation";
+import Navigation from '@/components/Navigation';
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
-    Navigation
+    Navigation,
   },
   props: {
-    source: String
+    source: String,
   },
 
   data: () => ({
-    drawer: null
-  })
+    drawer: null,
+  }),
 };
 </script>
 
 <style>
 main {
-  background-image: url("assets/brian-suman-Bfnh11jCv2E-unsplash (1).jpg");
+  background-image: url('assets/brian-suman-Bfnh11jCv2E-unsplash (1).jpg');
   background-position: center;
   background-size: cover;
 }
