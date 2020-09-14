@@ -5,18 +5,6 @@
     <v-main>
       <v-container class="fill-height" fluid>
         <router-view></router-view>
-        <!--        <v-row align="center" justify="center">-->
-        <!--          <v-col class="text-center">-->
-        <!--            <v-tooltip left>-->
-        <!--              <template v-slot:activator="{ on }">-->
-        <!--                <v-btn :href="source" icon large target="_blank" v-on="on">-->
-        <!--                  <v-icon large>mdi-code-tags</v-icon>-->
-        <!--                </v-btn>-->
-        <!--              </template>-->
-        <!--              <span>Source</span>-->
-        <!--            </v-tooltip>-->
-        <!--          </v-col>-->
-        <!--        </v-row>-->
       </v-container>
     </v-main>
     <v-footer color="primary" app>
@@ -26,10 +14,10 @@
 </template>
 
 <script>
-import Navigation from '@/components/Navigation';
+import Navigation from "@/components/Navigation";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Navigation,
   },
@@ -45,7 +33,7 @@ export default {
 
 <style>
 main {
-  background-image: url('assets/brian-suman-Bfnh11jCv2E-unsplash (1).jpg');
+  background-image: url("assets/brian-suman-Bfnh11jCv2E-unsplash (1).jpg");
   background-position: center;
   background-size: cover;
 }

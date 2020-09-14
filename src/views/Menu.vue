@@ -41,7 +41,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in basket" :key="index">
+            <tr v-for="item in basket" :key="item.id">
               <td class="pa-3">
                 <span class="font-weight-bold">{{ item.name }} </span> <br />
               </td>
@@ -90,29 +90,24 @@
 </template>
 
 <script>
-import { dbMenuAdd } from "@/firebase";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Menu",
   data() {
     return {
-      desserts: [],
-      basket: []
+      // desserts: [],
+      basketDump: [],
     };
   },
 
-  created() {
-    dbMenuAdd.get().then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(doc.id, " => ", doc.data());
-        let menuItemData = doc.data();
-        this.desserts.push(menuItemData);
-      });
-    });
+  beforeCreate() {
+    this.$store.dispatch("setMenuItems");
   },
 
   computed: {
+    ...mapGetters({ basket: "getBasket", desserts: "getMenuItems" }),
+
     subTotal() {
       let subCost = 0;
       for (let items in this.basket) {
@@ -125,20 +120,19 @@ export default {
     total() {
       let deliveryPrice = 10;
       return this.subTotal + deliveryPrice;
-    }
+    },
   },
 
   methods: {
+    ...mapActions({ setMenu: "setMenuItems" }),
     addToBasket(item) {
-      if (this.basket.find(itemInArray => item.name === itemInArray.name)) {
-        item = this.basket.find(itemInArray => item.name === itemInArray.name);
-        this.increaseQuantity(item);
-      } else
-        this.basket.push({
-          name: item.name,
-          price: item.price,
-          quantity: 1
-        });
+      this.basketDump.push({
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+      });
+      this.$store.commit("addBasketItems", this.basketDump);
+      this.basketDump = [];
     },
 
     increaseQuantity(item) {
@@ -150,8 +144,8 @@ export default {
       else if (item.quantity === 0) {
         this.basket.splice(this.basket.indexOf(item), 1);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

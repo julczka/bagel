@@ -27,6 +27,10 @@
           <v-btn color="warning" @click.prevent="signIn">
             Login
           </v-btn>
+
+          <v-btn color="warning" @click.prevent="signOut">
+            Logout
+          </v-btn>
         </v-form>
       </v-col>
     </v-row>
@@ -35,7 +39,6 @@
 
 <script>
 import firebase from "firebase";
-import "firebase/firestore";
 
 export default {
   name: "LogIn",
@@ -46,8 +49,8 @@ export default {
     email: "",
     emailRules: [
       v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
-    ]
+      v => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
   }),
 
   methods: {
@@ -56,7 +59,6 @@ export default {
     },
 
     signIn() {
-      console.log("hello");
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
@@ -67,14 +69,27 @@ export default {
         .catch(function(error) {
           // Handle Errors
 
-          var errorCode = error.code;
-          var errorMessage = error.message;
+          let errorCode = error.code;
+          let errorMessage = error.message;
           if (errorCode === "auth/wrong-password") alert("haslo kurwa");
           else alert(errorMessage);
           // ...
         });
-    }
-  }
+    },
+
+    signOut() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace("/");
+          alert("you are logged out");
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+  },
 };
 </script>
 
