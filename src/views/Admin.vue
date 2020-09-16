@@ -47,7 +47,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { dbMenuAdd } from "@/firebase";
+// import { dbMenuAdd } from "@/firebase";
 
 export default {
   name: "Admin",
@@ -74,21 +74,21 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setMenuItems"]),
+    ...mapActions(["setMenuItems", "deleteItem"]),
 
-    deleteItem(id) {
-      if (id)
-        dbMenuAdd
-          .doc(id)
-          .delete()
-          .then(function() {
-            console.log("Document successfully deleted!");
-          })
-          .catch(function(error) {
-            console.error("Error removing document: ", error);
-          });
-      this.setMenuItems();
-    },
+    // deleteItem(id) {
+    //   if (id)
+    //     dbMenuAdd
+    //       .doc(id)
+    //       .delete()
+    //       .then(function() {
+    //         console.log("Document successfully deleted!");
+    //       })
+    //       .catch(function(error) {
+    //         console.error("Error removing document: ", error);
+    //       });
+    //   // this.setMenuItems();
+    // },
   },
 };
 </script>

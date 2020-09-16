@@ -66,6 +66,21 @@ const store = new Vuex.Store({
       context.commit("grabMenuItems", menu);
       console.log("is this the real life");
     },
+
+    deleteItem: (contex, id) => {
+      if (id)
+        dbMenuAdd
+          .doc(id)
+          .delete()
+          .then(function() {
+            console.log("Document successfully deleted!");
+          })
+          .catch(function(error) {
+            console.error("Error removing document: ", error);
+          });
+
+      store.dispatch("setMenuItems");
+    },
   },
   modules: {},
   getters: {
