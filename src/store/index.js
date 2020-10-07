@@ -8,7 +8,10 @@ const store = new Vuex.Store({
   state: {
     basket: [],
     currentUser: null,
-    menuItems: [{ name: "a", price: "7", description: "ijdij" }],
+    menuItems: [],
+    snackbar: false,
+    text: "",
+    timeout: 4000,
   },
   mutations: {
     addBasketItems: (state, basketItems) => {
@@ -42,10 +45,19 @@ const store = new Vuex.Store({
       console.log("is this even happening?");
       state.menuItems = payload;
     },
+
+    displaySnackbar: (state, payload) => {
+      state.snackbar = payload.snackbar;
+      state.text = payload.text;
+    },
   },
   actions: {
     setUser(context, user) {
       context.commit("userStatus", user);
+    },
+
+    resetSnackbar: context => {
+      context.commit("displaySnackbar", { snackbar: false, text: "" });
     },
 
     setMenuItems: context => {
@@ -65,6 +77,28 @@ const store = new Vuex.Store({
       });
       context.commit("grabMenuItems", menu);
       console.log("is this the real life");
+    },
+
+    updateItem: (context, item) => {
+      console.log(context, item, "UPDATE FIRED");
+      dbMenuAdd
+        .doc(item.id)
+        .update(item)
+        .then(() => {
+          console.log("Document successfully updated!");
+          context.commit("displaySnackbar", {
+            snackbar: true,
+            text: `${item.name} succesfully updated`,
+          });
+        })
+        .catch(error => {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+          context.commit("displaySnackbar", {
+            snackbar: true,
+            text: `Something went wrong`,
+          });
+        });
     },
 
     deleteItem: (contex, id) => {
@@ -87,6 +121,9 @@ const store = new Vuex.Store({
     getBasket: state => state.basket,
     getUser: state => state.currentUser,
     getMenuItems: state => state.menuItems,
+    getSnackbar: state => state.snackbar,
+    getSnackbarText: state => state.text,
+    getSnackbarTimeout: state => state.timeout,
   },
 });
 

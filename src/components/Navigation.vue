@@ -85,7 +85,7 @@
     <v-app-bar app color="primary" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title class="font-weight-light headline"
-        >Jedz bajgla kurwa!</v-toolbar-title
+        >Yummy bagels by Bagly McBaggel</v-toolbar-title
       >
       <v-spacer></v-spacer>
       <v-btn v-if="user" @click="signOut()">Log out</v-btn>
