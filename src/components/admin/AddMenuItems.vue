@@ -30,6 +30,14 @@
             type="number"
           ></v-text-field>
 
+          <v-file-input
+            accept="image/*"
+            label="File input"
+            @change="uploadImage"
+            prepend-icon="mdi-camera"
+            @click:clear="removeImage"
+          ></v-file-input>
+
           <v-row justify="space-between" class="px-3 pt-6">
             <v-btn color="error" class="mr-4" @click="reset">
               Reset
@@ -38,6 +46,7 @@
               color="light-green accent-4"
               class="mr-4"
               @click="addNewMenuItem()"
+              :disabled="btnDisabled"
             >
               Submit
             </v-btn>
@@ -84,7 +93,7 @@
 </template>
 
 <script>
-import { dbMenuAdd } from "@/firebase";
+import { dbMenuAdd, storage } from "@/firebase";
 
 export default {
   data: () => ({
@@ -92,20 +101,60 @@ export default {
     name: "",
     nameRules: [
       v => !!v || "Name is required",
-      v => (v && v.length <= 30) || "Name must be less than 30 characters"
+      v => (v && v.length <= 30) || "Name must be less than 30 characters",
     ],
     description: "",
     descriptionRules: [
       v => !!v || "E-mail is required",
       v =>
-        (v && v.length <= 200) || "Description must be less than 200 characters"
+        (v && v.length <= 200) ||
+        "Description must be less than 200 characters",
     ],
-    price: null
+    price: null,
+    imageUrl: "",
+    btnDisabled: true,
   }),
 
   methods: {
     reset() {
       this.$refs.form.reset();
+    },
+
+    uploadImage(e) {
+      let file = e;
+      let storageRef = storage.ref("products/" + file.name);
+      let uploadTask = storageRef.put(file);
+
+      uploadTask.on(
+        "state_changed",
+        () => {},
+        error => {
+          console.log(error);
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+            console.log("File available at", downloadURL);
+            this.imageUrl = downloadURL;
+            this.btnDisabled = false;
+          });
+        }
+      );
+    },
+
+    removeImage(e) {
+      // FIXME zrobic upload z id
+      let storageRef = storage.ref("products/" + e.name);
+
+      // Delete the file
+      storageRef
+        .delete()
+        .then(() => {
+          this.btnDisabled = true;
+          console.log("image femoved");
+        })
+        .catch(error => {
+          console.log("error deleting image", error);
+        });
     },
 
     showAlertSuccess() {
@@ -118,7 +167,8 @@ export default {
         .add({
           name: this.name,
           description: this.description,
-          price: this.price
+          price: this.price,
+          imageUrl: this.imageUrl,
         })
         .then(function(docRef) {
           self.reset();
@@ -129,8 +179,8 @@ export default {
         .catch(function(error) {
           console.error("Error adding document: ", error);
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
